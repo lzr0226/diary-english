@@ -1,0 +1,9 @@
+.env*
+node_modules
+.next
+.pnpm-store
+artifacts
+data/ecdict/*.csv
+画布
+tests
+*.tsbuildinfo

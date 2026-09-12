@@ -1,0 +1,23 @@
+我想制作以一个写日记、学习英语的小软件。 可以用英文写日记，但是也可以用中文写，最后点击ai润色或翻译就可以生成全部的英文地道段落。最后从里面可以中译英，从里面可以提取不会的单词，背单词。
+
+前端实现：
+Web 端使用 Next.js 开发，主要页面包括登录/注册、写日记（日记1、日记2、日记3）、生词本、AI助手和个人中心（我的）。前端负责用户交互、日记撰写、生词录入、记录列表展示和移动端适配。体重趋势通过历史记录计算变化值、阶段趋势、最高/最低体重、BMI 等指标，并用图表组件展示。微信小程序端实现类似的核心功能，适合手机端快速记录和查看。
+
+后端实现：
+后端主要负责用户登录状态、体重数据、饮食数据、AI 对话记录和用户配置的读写。Web 端可以通过 Next.js 的 API Routes / Server Actions 处理请求；小程序端可以通过腾讯云 CloudBase 云函数处理请求。后端不会把 DeepSeek API Key 暴露给前端，而是由服务端统一调用 DeepSeek API，再把 AI 回复返回给用户。
+
+用户数据管理：
+用户数据主要放在 Supabase 上管理。Supabase 提供 PostgreSQL 数据库和用户认证能力。每个用户登录后，体重记录、饮食记录、个人资料、目标体重、AI 对话记录等数据都会和 user_id 绑定。数据库中可以设计 users/profile、weight_records、food_records、ai_chat_messages、user_goals 等表。为了保护隐私，需要配置 Row Level Security，保证用户只能访问自己的数据。
+
+腾讯云 CloudBase 实现：
+腾讯云 CloudBase 主要用于微信小程序端的后端能力和部署管理。小程序可以接入 CloudBase 环境，通过云函数完成数据请求、AI 接口转发、用户 openid 获取、登录态校验等逻辑。CloudBase 也可以用于静态托管或云函数部署，让小程序端不直接访问敏感接口。也就是说，小程序前端调用 CloudBase 云函数，云函数再去访问 Supabase 数据库或 DeepSeek API。
+
+AI 功能实现：
+AI 助手使用 DeepSeek API。用户在前端输入关于体重、饮食、运动或健康管理的问题后，请求会发送到后端接口。后端根据用户当前的体重记录、饮食记录、目标体重等上下文拼接 prompt，再调用 DeepSeek API，返回个性化建议。这样既能避免前端泄露 API Key，也能让 AI 回复结合用户自己的数据。
+
+整体架构：
+Next.js Web 端部署在 Vercel；
+微信小程序端通过微信开发者工具开发，并接入腾讯云 CloudBase；
+Supabase 负责用户认证和核心业务数据存储；
+CloudBase 负责小程序端云函数、openid、接口转发和部分云端能力；
+DeepSeek API 负责 AI 健康助手对话能力。

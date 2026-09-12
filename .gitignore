@@ -1,0 +1,9 @@
+node_modules/
+.pnpm-store/
+.next/
+.env*
+!.env.example
+!.env.cloud.example
+*.tsbuildinfo
+data/ecdict/*.csv
+public/pdf.worker.min.mjs
