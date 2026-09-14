@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { tencentEnabled } from "@/lib/cloud/config";
 export function Legal({ privacy }: { privacy: boolean }) {
   return (
     <main className="main">
@@ -7,9 +8,11 @@ export function Legal({ privacy }: { privacy: boolean }) {
         {privacy ? (
           <>
             <p>
-              拾语用于记录日记和学习英语。云端模式下，邮箱与登录凭据由 Supabase
-              Auth
-              处理；日记、词汇、复习记录、资料和对话保存在账号对应的云端数据中，图片保存在私有存储中。
+              拾语用于记录日记和学习英语。
+              {tencentEnabled
+                ? "腾讯云模式使用邮箱验证码登录，验证码通过配置的邮件服务发送。邮箱、登录会话、日记和学习记录存储在腾讯云，浏览器不连接 Supabase。"
+                : "原云端模式的邮箱认证由 Supabase Auth 处理。"}
+              日记、词汇、复习记录、资料和对话保存在账号对应的云端数据中，图片保存在私有存储中。
             </p>
             <p>
               为防止网络中断造成丢失，当前浏览器会保存账号数据缓存和待同步草稿。共用设备使用后请退出账号。
@@ -19,6 +22,9 @@ export function Legal({ privacy }: { privacy: boolean }) {
               DeepSeek 处理。网站不会默认发送全部日记。
             </p>
             <p>
+              语音输入仅在你主动开启麦克风后录音，结束时将录音发送至腾讯云识别，不在本应用长期保存原始音频。识别文字须确认后加入日记。
+            </p>
+            <p>
               问题反馈只发送你填写的标题、正文与联系邮箱，收件人为
               1363578991@qq.com。你可以在设置导出记录，在相册下载照片，在日记/生词/对话页面删除内容。账号或云端数据彻底删除请求可通过该邮箱联系维护者。
             </p>
@@ -26,7 +32,7 @@ export function Legal({ privacy }: { privacy: boolean }) {
         ) : (
           <>
             <p>
-              请使用你自己的邮箱注册账号，妥善保管密码。写日记、生词学习与复习是本网站的主要用途。
+              请使用你自己的邮箱注册账号，妥善保管登录凭据，不要把验证码告诉他人。写日记、生词学习与复习是本网站的主要用途。
             </p>
             <p>
               AI

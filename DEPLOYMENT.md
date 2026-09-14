@@ -1,4 +1,8 @@
+本文件是原 Supabase/Vercel 部署说明。当前改为腾讯云 Web 版，请使用 [TENCENT-WEB.md](TENCENT-WEB.md)，无需微信小程序。
+
 # 拾语云端版部署
+
+新增直接反馈发信、腾讯云语音和可选微信身份绑定，配置见 [MAIL-AND-VOICE.md](MAIL-AND-VOICE.md)。微信小程序使用独立的腾讯云部署，见 [tencent/README.md](tencent/README.md)，不随 Vercel 发布。
 
 本版本已提供真实认证、云端记录、私有图片、服务端 DeepSeek 和反馈接口。**仅有代码不代表已发布**：需要在你的 Supabase / Vercel 账号完成下面配置，并通过真实环境验收。没有配置时，本机继续以 demo 模式展示，Vercel 构建会拒绝发布 demo 模式。
 
@@ -90,3 +94,4 @@ pnpm start
 - 没有真实项目凭据时，无法验证邮件、RLS、模型密钥或公网地址，请勿把本地测试结果当作已上线。
 
 依据：[Supabase 邮箱认证](https://supabase.com/docs/guides/auth/passwords)、[Storage RLS](https://supabase.com/docs/guides/storage/security/access-control)、[Vercel Next.js 部署](https://vercel.com/docs/frameworks/full-stack/nextjs)。
+

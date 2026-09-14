@@ -11,7 +11,11 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { cloudEnabled } from "@/lib/cloud/config";
-import { supabase } from "@/lib/cloud/client";
+import {
+  currentCloudUser,
+  cloudLogout,
+  onCloudLogout,
+} from "@/lib/cloud/client";
 import { cloudSync, forgetCloudSync } from "@/lib/cloud/sync";
 import { CloudLogin } from "./CloudLogin";
 import { Legal } from "./Legal";
@@ -76,12 +80,8 @@ export default function App() {
     (async () => {
       try {
         if (cloudEnabled) {
-          const { data: session, error } = await supabase().auth.getSession();
-          if (error) throw error;
-          if (session.session) {
-            const result = await supabase().auth.getUser();
-            if (result.error) throw result.error;
-            const id = result.data.user.id;
+          const id = await currentCloudUser();
+          if (id) {
             const loaded = await cloudSync(id).load();
             if (alive) {
               setUser(id);
@@ -134,15 +134,10 @@ export default function App() {
   useEffect(() => {
     if (!cloudEnabled) return;
     try {
-      const { data: subscription } = supabase().auth.onAuthStateChange(
-        (event) => {
-          if (event === "SIGNED_OUT") {
-            setUser("");
-            setData(null);
-          }
-        },
-      );
-      return () => subscription.subscription.unsubscribe();
+      return onCloudLogout(() => {
+        setUser("");
+        setData(null);
+      });
     } catch {}
   }, []);
   useEffect(() => {
@@ -176,6 +171,7 @@ export default function App() {
   };
   const login = async (id: string) => {
     try {
+      setError("");
       setUser(id);
       setData(
         cloudEnabled
@@ -241,7 +237,7 @@ export default function App() {
                 setError("仍有未同步草稿，请先同步或导出备份再退出。");
                 return;
               }
-              const { error } = await supabase().auth.signOut();
+              const { error } = await cloudLogout();
               if (error) {
                 setError("退出失败，请重试。");
                 return;

@@ -1,0 +1,10 @@
+{
+  "pages": ["pages/login/index", "pages/diaries/index", "pages/editor/index", "pages/detail/index", "pages/vocabulary/index", "pages/review/index", "pages/assistant/index", "pages/me/index", "pages/album/index", "pages/feedback/index", "pages/privacy/index"],
+  "window": { "navigationBarTitleText": "拾语", "navigationBarBackgroundColor": "#ffffff", "navigationBarTextStyle": "black", "backgroundColor": "#faf8f8" },
+  "tabBar": { "color": "#777777", "selectedColor": "#b94c66", "backgroundColor": "#ffffff", "list": [
+    {"pagePath":"pages/diaries/index","text":"日记"}, {"pagePath":"pages/vocabulary/index","text":"生词本"}, {"pagePath":"pages/assistant/index","text":"AI 助手"}, {"pagePath":"pages/me/index","text":"我的"}
+  ]},
+  "permission": { "scope.record": { "desc": "将你主动录制的语音识别为日记文字" } },
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

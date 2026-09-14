@@ -3,7 +3,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { Leaf } from "lucide-react";
 import { supabase } from "@/lib/cloud/client";
-import { cloudConfigured } from "@/lib/cloud/config";
+import { cloudConfigured, tencentEnabled } from "@/lib/cloud/config";
+import { TencentLogin } from "./TencentLogin";
 export function CloudLogin({
   path,
   login,
@@ -19,6 +20,7 @@ export function CloudLogin({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  if (tencentEnabled) return <TencentLogin login={login} />;
   if (!cloudConfigured)
     return (
       <div className="empty">

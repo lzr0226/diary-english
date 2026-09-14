@@ -5,6 +5,7 @@ import {
   consumeQuota,
   boundedJSON,
   HTTPError,
+  readAuthenticatedData,
 } from "@/lib/server/security";
 import { DeepSeekAdapter } from "@/lib/server/adapters";
 export const maxDuration = 60;
@@ -33,13 +34,8 @@ export async function POST(request: Request) {
     if (input.data.task === "chat") {
       let context = "";
       if (input.data.diaryId) {
-        const { data, error } = await client
-          .from("learning_data")
-          .select("data")
-          .eq("user_id", user.id)
-          .maybeSingle();
-        if (error) throw new HTTPError(503, "无法读取关联日记");
-        const diaries = data?.data?.diaries as
+        const data = await readAuthenticatedData(client, user.id);
+        const diaries = data?.diaries as
           | {
               id: string;
               original: string;

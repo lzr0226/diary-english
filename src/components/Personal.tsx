@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { Album } from "./Photos";
 import { Feedback } from "./Feedback";
+import { ImportAccount } from "./ImportAccount";
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
@@ -28,7 +29,7 @@ import {
 } from "lucide-react";
 import { Session, uid } from "@/lib/model";
 import { aiService } from "@/lib/ai-service";
-import { cloudEnabled } from "@/lib/cloud/config";
+import { cloudEnabled, tencentEnabled } from "@/lib/cloud/config";
 import { Header, useApp } from "./App";
 import { Empty, Modal } from "./ui";
 export function Assistant() {
@@ -417,6 +418,13 @@ export function Me({ path, logout }: { path: string; logout: () => void }) {
   }
   if (path === "/me/album") return <Album />;
   if (path === "/me/feedback") return <Feedback />;
+  if (path === "/me/wechat")
+    return (
+      <>
+        <Header title="微信关联暂缓" />
+        <p className="notice">当前版本继续使用网站，暂不提供小程序关联。</p>
+      </>
+    );
   if (path === "/me/profile")
     return (
       <>
@@ -527,6 +535,7 @@ export function Me({ path, logout }: { path: string; logout: () => void }) {
           <Download size={18} />
           导出账号数据（JSON）
         </button>
+        {tencentEnabled && <ImportAccount />}
         <p className="notice">
           {cloudEnabled
             ? "记录同步至云端，本机保留恢复缓存。JSON 不包含照片文件，请在相册单独下载。"

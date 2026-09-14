@@ -1,4 +1,8 @@
+当前方案：保留 Next.js 网站，新增中国大陆腾讯云部署模式（邮箱验证码注册/登录、私有云数据和图片），保留直接邮件反馈与语音输入，暂停微信小程序。请优先阅读 [TENCENT-WEB.md](TENCENT-WEB.md) 和 [.env.tencent.example](.env.tencent.example)。以下旧 Supabase/Vercel 与小程序说明仅适用于旧版本；当前代码尚未自动部署到云端。
+
 # 拾语 · 日记英语学习 Web 应用
+
+2026-09-14 更新：反馈主操作改为服务端直接发送；日记编辑新增腾讯云语音识别和确认追加；新增独立的腾讯云微信小程序。发信与语音配置见 [MAIL-AND-VOICE.md](MAIL-AND-VOICE.md)，小程序导入、CloudBase 集合与权限、部署及真机验收见 [tencent/README.md](tencent/README.md)。小程序源码使用国内 CloudBase 存储，微信登录不访问 Supabase。真实发信/识别/微信登录仍需要对应云配置。
 
 现提供本地演示和云端两种模式。云端版包含邮箱注册、登录、密码重置、账号数据同步、私有照片和服务端 AI；正式发布请按 [DEPLOYMENT.md](DEPLOYMENT.md) 配置 Supabase、Vercel 和 DeepSeek。尚未配置真实项目时，默认使用本地演示，不代表网站已经上线。
 
@@ -160,3 +164,4 @@ artifacts/                     本次浏览器验证截图
 ### 新增验证
 
 `tests/improvements.test.ts` 覆盖规则润色、词形、导入、图片关联、反馈编码与 LAN UUID。`scripts/improvements-smoke.cjs` 用真实浏览器验证 PDF/DOCX 解析、即时词义、图片刷新/相册和反馈草稿；不发送真实邮件。
+

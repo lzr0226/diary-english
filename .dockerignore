@@ -1,0 +1,13 @@
+.git
+.env*
+node_modules
+**/node_modules
+.next
+.pnpm-store
+artifacts
+tencent
+tests
+画布
+data/ecdict/*.csv
+*.tsbuildinfo
+*.txt

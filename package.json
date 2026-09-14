@@ -2,17 +2,24 @@
   "name": "diary-english",
   "version": "1.0.0",
   "private": true,
-  "engines": { "node": "24.x" },
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "dev": "next dev --hostname 0.0.0.0",
     "build": "next build",
     "start": "next start --hostname 0.0.0.0",
     "lint": "eslint .",
     "test": "tsx --test tests/*.test.ts",
+    "pretest": "node scripts/build-miniprogram.cjs",
+    "build:mini": "node scripts/build-miniprogram.cjs && node scripts/check-miniprogram.cjs",
+    "check:services": "node scripts/check-services.cjs",
+    "check:tencent": "node scripts/check-tencent-web.cjs",
     "predev": "node scripts/prepare-assets.cjs",
     "prebuild": "node scripts/check-cloud-config.cjs && node scripts/prepare-assets.cjs"
   },
   "dependencies": {
+    "@cloudbase/node-sdk": "3.18.3",
     "@noble/hashes": "^2.4.0",
     "@supabase/supabase-js": "^2.116.0",
     "lucide-react": "^0.468.0",

@@ -1,5 +1,5 @@
-import { cloudEnabled } from "./cloud/config";
-import { supabase } from "./cloud/client";
+import { cloudEnabled, tencentEnabled } from "./cloud/config";
+import { supabase, authorizedFetch } from "./cloud/client";
 import { uid } from "./model";
 function openDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -14,6 +14,14 @@ export async function readPhoto(
   user: string,
   id: string,
 ): Promise<string | undefined> {
+  if (tencentEnabled) {
+    const r = await authorizedFetch(
+      "/api/tencent/photos?id=" + encodeURIComponent(id),
+    );
+    const body = await r.json();
+    if (!r.ok) throw new Error(body.message);
+    return body.url;
+  }
   if (cloudEnabled) {
     const { data, error } = await supabase()
       .storage.from("diary-images")
@@ -72,6 +80,16 @@ export async function storePhoto(user: string, file: File): Promise<string> {
     URL.revokeObjectURL(url);
   }
   const id = uid();
+  if (tencentEnabled) {
+    const r = await authorizedFetch("/api/tencent/photos", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ image: data }),
+    });
+    const body = await r.json();
+    if (!r.ok) throw new Error(body.message);
+    return body.id;
+  }
   if (cloudEnabled) {
     const blob = await (await fetch(data)).blob();
     const { error } = await supabase()

@@ -70,13 +70,6 @@ export function Feedback() {
               );
               return;
             }
-            if (!direct) {
-              window.location.href = feedbackMailto(subject, message, replyTo);
-              setStatus(
-                "已请求打开邮件客户端，请在那里点击发送。网页无法确认邮件是否发出。",
-              );
-              return;
-            }
             setBusy(true);
             try {
               const response = await (cloudEnabled ? authorizedFetch : fetch)(
@@ -130,7 +123,7 @@ export function Feedback() {
           <p className="notice">
             {direct
               ? "提交后，只将此表单的内容发送至开发者邮箱，不附带日记或生词数据。"
-              : "当前未配置网站发信服务。点击下方按钮会打开你的邮件客户端，收件人和正文已填好，需你在客户端确认发送。"}
+              : "网站发信服务尚未就绪，直接发送可能失败。正文会保留，你也可以保存草稿或选择邮件客户端。"}
           </p>
           {error && (
             <p className="error" role="alert">
@@ -143,7 +136,7 @@ export function Feedback() {
             </p>
           )}
           <button className="primary wide" disabled={busy || !valid}>
-            {busy ? "正在发送…" : direct ? "发送反馈" : "打开邮件客户端发送"}
+            {busy ? "正在发送…" : "发送反馈"}
           </button>
           <button
             type="button"
@@ -154,14 +147,14 @@ export function Feedback() {
           >
             保存反馈草稿
           </button>
-          {direct && (
+          {
             <a
               className="button wide"
               href={feedbackMailto(subject, message, replyTo)}
             >
               改用邮件客户端
             </a>
-          )}
+          }
           <p className="tiny muted">
             没有配置邮件应用？可复制正文，手动发送到上述邮箱。
           </p>

@@ -171,7 +171,7 @@ async function sampleDOCX() {
     );
     assert.ok(
       await page
-        .getByRole("button", { name: "打开邮件客户端发送" })
+        .getByRole("button", { name: "发送反馈", exact: true })
         .isVisible(),
     );
     await page.screenshot({ path: "artifacts/feedback-v2.png" });

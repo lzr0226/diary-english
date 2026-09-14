@@ -26,6 +26,8 @@ import { addWords, adoptResult, saveDiary } from "@/lib/services";
 import { Header, useApp } from "./App";
 import { Empty, Modal } from "./ui";
 import { moodOptions, getMood } from "@/lib/moods";
+import { VoiceInput } from "./VoiceInput";
+import { appendTranscript } from "@/lib/audio";
 const dateText = (date: string) =>
   new Date(date).toLocaleString("zh-CN", {
     month: "long",
@@ -755,7 +757,7 @@ export function DiaryEditor({ id }: { id?: string }) {
         />
         <textarea
           aria-label="日记正文"
-          placeholder="今天，有什么想留下来？\n中文、英文，或两种语言都可以。"
+          placeholder={"今天，有什么想留下来？\n中文、英文，或两种语言都可以。"}
           value={diary.original}
           onChange={(e) => setDiary({ ...diary, original: e.target.value })}
           maxLength={10000}
@@ -765,6 +767,7 @@ export function DiaryEditor({ id }: { id?: string }) {
           <Pencil size={17} />
         </footer>
       </section>
+      <VoiceInput onAppend={(text) => setDiary({ ...diary, original: appendTranscript(diary.original, text) })} />
       <div className="save-line">
         <span role="status">{saved}</span>
         <button

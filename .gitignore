@@ -4,6 +4,9 @@ node_modules/
 .env*
 !.env.example
 !.env.cloud.example
+!.env.tencent.example
 *.tsbuildinfo
 data/ecdict/*.csv
 public/pdf.worker.min.mjs
+tencent/project.private.config.json
+tencent/miniprogram/config.local.js

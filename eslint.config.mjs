@@ -9,16 +9,19 @@ const compat = new FlatCompat({
 const config = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
-    files: ["scripts/*.cjs"],
+    files: ["scripts/*.cjs", "tencent/**/*.js"],
     rules: { "@typescript-eslint/no-require-imports": "off" },
   },
   {
     ignores: [
       ".next/**",
       "node_modules/**",
+      ".pnpm-store/**",
       "next-env.d.ts",
       "public/**",
       "data/**",
+      "tencent/cloudfunctions/diaryApi/core.cjs",
+      "tencent/**/node_modules/**",
     ],
   },
 ];

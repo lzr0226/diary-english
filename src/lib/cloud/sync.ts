@@ -1,6 +1,7 @@
 "use client";
 import type { Data } from "../model";
-import { supabase } from "./client";
+import { supabase, authorizedFetch } from "./client";
+import { tencentEnabled } from "./config";
 import { dataSchema, emptyCloudData } from "./validation";
 type Envelope = { data: Data; revision: number; pending: boolean };
 export type SyncStatus = "saved" | "saving" | "offline" | "error" | "conflict";
@@ -13,6 +14,14 @@ export interface CloudRemote {
 }
 const remoteGateway: CloudRemote = {
   async read(user) {
+    if (tencentEnabled) {
+      const r = await authorizedFetch("/api/tencent/data", {
+        cache: "no-store",
+      });
+      const body = await r.json();
+      if (!r.ok) throw new Error(body.message);
+      return body;
+    }
     const { data, error } = await supabase()
       .from("learning_data")
       .select("data,revision")
@@ -22,6 +31,17 @@ const remoteGateway: CloudRemote = {
     return data;
   },
   async save(revision, payload) {
+    if (tencentEnabled) {
+      const r = await authorizedFetch("/api/tencent/data", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ revision, data: payload }),
+      });
+      const body = await r.json();
+      return r.ok
+        ? { data: body.revision, error: null }
+        : { data: null, error: { code: body.code } };
+    }
     return supabase().rpc("save_learning_data", {
       expected_revision: revision,
       payload,
@@ -77,8 +97,13 @@ export class CloudSync {
     let data: { data: unknown; revision: number } | null;
     try {
       data = await this.remote.read(this.userId);
-    } catch {
-      if (!cached) throw new Error("云端数据读取失败，请检查网络后重试。");
+    } catch (error) {
+      if (!cached)
+        throw new Error(
+          tencentEnabled && error instanceof Error
+            ? error.message
+            : "云端数据读取失败，请检查网络后重试。",
+        );
       this.state = cached;
       this.report("offline", "离线缓存 · 修改尚未同步");
       return cached.data;
